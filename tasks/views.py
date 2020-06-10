@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 import io
 from django.http import FileResponse
 from reportlab.pdfgen import canvas
+import datetime
 
 
 # Create your views here.
@@ -123,9 +124,9 @@ def get_PDF(request):
     # Close the PDF object cleanly, and we're done.
     p.showPage()
     p.save()
-
+    file_name = user.get_username() + '-' +  datetime.datetime.now().strftime("%m%d%Y%H%M") + '.pdf'
     # FileResponse sets the Content-Disposition header so that browsers
     # present the option to save the file.
     buffer.seek(0)
-    return FileResponse(buffer, as_attachment=True, filename='hello.pdf')
+    return FileResponse(buffer, as_attachment=True, filename=file_name)
 
