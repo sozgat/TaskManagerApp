@@ -20,18 +20,15 @@ def task_index(request):
     tags = Tag.objects.all()
     return render(request, 'index.html', {'tasks': tasks, 'taskTagIntegration': taskTagIntegration, 'tags': tags})
 
-def task_delete(request, id):
-    task = get_object_or_404(Task, id=id)
-    task.delete()
-    return redirect('../../')
-
 @csrf_exempt
-def task_delete2(request, id):
-
-    if request.method == "DELETE":
+def task_delete(request):
+    if request.method == "POST":
+        id = request.POST['taskId']
+        print(id)
         task = get_object_or_404(Task, id=id)
         task.delete()
     return HttpResponse("remove")
+
 
 @csrf_exempt
 def task_create(request):

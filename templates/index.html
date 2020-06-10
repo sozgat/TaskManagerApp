@@ -17,7 +17,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="#">{% if request.user.is_authenticated %}
-                Merhaba ,{{ request.user.get_username }}
+                Hi ,{{ request.user.get_username }}
             {% endif %}</a>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -114,12 +114,13 @@
                 $('.btn-delete').on('click', function(){
                     $that = $(this);
                     var itemId =$that.attr('id');
-                    var url = "/delete2/" + itemId;
-                    //alert(url);
                     if(confirm("Are you sure ?")){
                         $.ajax({
-                            type:'DELETE',
-                            url:url,
+                            type:'POST',
+                            url:'/delete/',
+                            data:{
+                                taskId: itemId,
+                            },
                             success:function(response){
                                 if (response=="remove"){
                                     location.reload();
