@@ -116,7 +116,7 @@ def get_PDF(request):
         if x.is_completed == 1:
             p.drawString(400, ycoordinate, "✓")
         else:
-            p.drawString(400, ycoordinate, "")
+            p.drawString(400, ycoordinate, "No")
         p.drawString(20, ycoordinate, x.task) # x koordinatı, y koordinatı
         p.drawString(470, ycoordinate, date_time)
         ycoordinate = ycoordinate - 25
