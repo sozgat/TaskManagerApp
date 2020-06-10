@@ -15,8 +15,21 @@
         </style>
     </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">{% if request.user.is_authenticated %}
+                Merhaba ,{{ request.user.get_username }}
+            {% endif %}</a>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'accounts:logout' %}">Logout <span class="sr-only">(current)</span></a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
         <div class="container-fluid text-dark">
-            Merhaba , {{ isim }}
             <div class="row bg-light pl-5 pr-5 pt-1 pb-1 mb-3">
                 <div class="col-8 offset-2">
                     <div class="form-group mt-3">
@@ -58,12 +71,13 @@
                                 <button type="button" class="btn btn-sm btn-link btn-delete" id="{{ task.id }}"><small>Delete</small></button></div>
                             </div>
                         </li>
+                            <!--- <hr>
+                            <h4>User: {{ task.user }}</h4> -->
                        {% endfor %}
 
                     </ul>
                 </div>
             </div>
-
         </div>
 
         <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
@@ -136,6 +150,9 @@
                                 if (response=="create"){
                                     location.reload();
                                 }
+                                else if(response=="UserNotLogin"){
+                                    alert("Please, Login!");
+                                }
                                 else{
                                     alert("CREATE ERROR!");
                                 }
@@ -167,6 +184,9 @@
                             success:function(response){
                                 if (response=="update"){
                                     //location.reload();
+                                }
+                                else if(response=="UserNotLogin"){
+                                    alert("Please, Login!");
                                 }
                                 else{
                                     alert("Update ERROR!");

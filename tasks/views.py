@@ -1,14 +1,21 @@
-from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
+from django.shortcuts import render, HttpResponse, get_object_or_404, redirect, Http404
 from tasks.models import Task
 from tags.models import *
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
+from django.contrib.auth.models import User
+
 
 
 
 # Create your views here.
 
 def task_index(request):
-    tasks = Task.objects.all()
+    if not request.user.is_authenticated:
+        return redirect('accounts/login')
+    user = User.objects.get(id=request.user.id)
+    tasks = user.tasks.all()
+
+    #tasks = Task.objects.all()
     taskTagIntegration = TagsTaskIntegration.objects.all()
     tags = Tag.objects.all()
     return render(request, 'index.html', {'tasks': tasks, 'taskTagIntegration': taskTagIntegration, 'tags': tags})
@@ -29,9 +36,12 @@ def task_delete2(request, id):
 @csrf_exempt
 def task_create(request):
 
+    if not request.user.is_authenticated:
+        return HttpResponse("UserNotLogin")
     if request.method == "POST":
         taskName = request.POST['taskName']
         tags = request.POST.getlist('selectedTags')
+        UserData = request.user
         array = []
         tagsZero = tags[0]  # string'e döndürdük, split kullanabilmek için
         count = tagsZero.count('&')
@@ -41,7 +51,7 @@ def task_create(request):
             array.append(arrayValues)
         print(array)
         print(tags)
-        Task.objects.create(task=taskName,is_completed=False)
+        Task.objects.create(task=taskName,is_completed=False,user=UserData)
         latestData = Task.objects.latest('id')
         for x in (array):
            if x == "priority":
@@ -57,7 +67,8 @@ def task_create(request):
 
 @csrf_exempt
 def task_stateUpdate(request):
-
+    if not request.user.is_authenticated:
+        return HttpResponse("UserNotLogin")
     if request.method == "POST":
         taskState = request.POST['taskState']
         taskId = request.POST['taskId']
